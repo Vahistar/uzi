@@ -1,0 +1,16 @@
+{
+  "name": "uzi.pm",
+  "version": "1.0.0",
+  "description": "uzi.pm — package manager for scripts, one-command install via curl/wget",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node db.js --seed"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "sql.js": "^1.11.0"
+  }
+}

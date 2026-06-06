@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  uzi:
+    build: .
+    container_name: uzi
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - APP_DB_PATH=/app/data/scripts.db
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-zmien_to_haslo}
+      - APP_NAME=${APP_NAME:-uzi.pm}
+      - APP_URL=${APP_URL:-https://uzi.pm}
+    volumes:
+      - uzi:/app/data
+
+volumes:
+  uzi:
