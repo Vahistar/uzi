@@ -57,10 +57,11 @@ router.get('/hearts/:slug/status', async (req, res, next) => {
   try {
     const script = await db.get('SELECT id FROM scripts WHERE slug = ?', [req.params.slug]);
     if (!script) return res.status(404).json({ error: 'Not found' });
+    const token = req.headers['x-heart-token'] || '';
     const ipHash = req.ip_hash;
     const recent = await db.get(
-      'SELECT id FROM heart_logs WHERE script_id = ? AND ip_hash = ? AND created_at > datetime("now", "-1 day")',
-      [script.id, ipHash]
+      `SELECT id FROM heart_logs WHERE script_id = ? AND (token = ? OR (token IS NULL AND ip_hash = ?)) AND created_at > datetime("now", "-1 day")`,
+      [script.id, token, ipHash]
     );
     res.json({ liked: !!recent });
   } catch (e) {
@@ -75,14 +76,19 @@ router.post('/hearts/:slug', async (req, res, next) => {
     const token = req.headers['x-heart-token'] || '';
     const ipHash = req.ip_hash;
     const recent = await db.get(
-      'SELECT id FROM heart_logs WHERE script_id = ? AND ip_hash = ? AND created_at > datetime("now", "-1 day")',
-      [script.id, ipHash]
+      `SELECT id, token FROM heart_logs WHERE script_id = ? AND (token = ? OR (token IS NULL AND ip_hash = ?)) AND created_at > datetime("now", "-1 day")`,
+      [script.id, token, ipHash]
     );
     if (recent) {
-      await db.run('DELETE FROM heart_logs WHERE id = ?', [recent.id]);
-      await db.run('UPDATE scripts SET hearts = MAX(0, hearts - 1) WHERE id = ?', [script.id]);
+      if (recent.token === token) {
+        await db.run('DELETE FROM heart_logs WHERE id = ?', [recent.id]);
+        await db.run('UPDATE scripts SET hearts = MAX(0, hearts - 1) WHERE id = ?', [script.id]);
+        const updated = await db.get('SELECT hearts FROM scripts WHERE id = ?', [script.id]);
+        return res.json({ hearts: updated.hearts, action: 'removed' });
+      }
+      await db.run('UPDATE heart_logs SET token = ? WHERE id = ?', [token, recent.id]);
       const updated = await db.get('SELECT hearts FROM scripts WHERE id = ?', [script.id]);
-      return res.json({ hearts: updated.hearts, action: 'removed' });
+      return res.json({ hearts: updated.hearts, action: 'added' });
     }
     await db.run('UPDATE scripts SET hearts = hearts + 1 WHERE id = ?', [script.id]);
     await db.run('INSERT INTO heart_logs (script_id, ip_hash, token) VALUES (?, ?, ?)', [script.id, ipHash, token]);
