@@ -562,6 +562,10 @@ router.get('/scripts/new', async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
+function normalizeLf(str) {
+  return String(str).replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+}
+
 router.post('/scripts', async (req, res, next) => {
   try {
     const { slug, name, description, long_desc, distro, tested_on, script_content } = req.body;
@@ -570,7 +574,7 @@ router.post('/scripts', async (req, res, next) => {
     }
     await db.run(
       'INSERT INTO scripts (slug, name, description, long_desc, distro, tested_on, script_content, script_content_ps1) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [slug, name, description, long_desc || '', distro, tested_on || '', script_content, req.body.script_content_ps1 || '']
+      [slug, name, description, long_desc || '', distro, tested_on || '', normalizeLf(script_content), normalizeLf(req.body.script_content_ps1 || '')]
     );
     res.redirect('/admin/scripts');
   } catch (e) {
@@ -762,7 +766,7 @@ router.post('/scripts/:id/update', async (req, res, next) => {
     }
     await db.run(
       'UPDATE scripts SET slug=?, name=?, description=?, long_desc=?, distro=?, tested_on=?, script_content=?, script_content_ps1=? WHERE id=?',
-      [slug, name, description, long_desc || '', distro, tested_on || '', script_content, req.body.script_content_ps1 || '', req.params.id]
+      [slug, name, description, long_desc || '', distro, tested_on || '', normalizeLf(script_content), normalizeLf(req.body.script_content_ps1 || ''), req.params.id]
     );
     res.redirect('/admin/scripts');
   } catch (e) {
