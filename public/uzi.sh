@@ -10,7 +10,7 @@ D="\033[2m"
 N="\033[0m"
 
 API_HOST="${UZI_HOST:-https://uzi.pm}"
-API_URL="$API_HOST"
+API_URL="$API_HOST/api"
 
 usage() {
   local logo=(
@@ -45,6 +45,21 @@ usage() {
   echo
 }
 
+urlencode() {
+  local s="$1"
+  local out=""
+  local i c
+  for ((i=0; i<${#s}; i++)); do
+    c="${s:i:1}"
+    case "$c" in
+      [a-zA-Z0-9.~_-]) out+="$c" ;;
+      ' ') out+="+" ;;
+      *) printf -v out "%s%%%02X" "$out" "'$c" ;;
+    esac
+  done
+  echo "$out"
+}
+
 api_get() {
   local path="$1"; shift
   curl -sf "$API_URL/$path" "$@" 2>/dev/null || {
@@ -57,7 +72,9 @@ cmd_search() {
   local q="${1:-}"
   local data
   if [ -n "$q" ]; then
-    data=$(api_get "search?q=$q")
+    local enc
+    enc=$(urlencode "$q")
+    data=$(api_get "search?q=$enc")
   else
     data=$(api_get "search")
   fi
