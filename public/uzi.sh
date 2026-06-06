@@ -10,7 +10,7 @@ D="\033[2m"
 N="\033[0m"
 
 API_HOST="${UZI_HOST:-https://uzi.pm}"
-API_URL="$API_HOST/api"
+API_URL="$API_HOST"
 
 usage() {
   local logo=(
@@ -138,7 +138,11 @@ cmd_install() {
 case "${1:-}" in
   install|i|-i)
     shift
-    cmd_install "${1:?Usage: uzi install <slug>}"
+    if [ -z "${1:-}" ]; then
+      echo -e "  ${R}Usage:${N} uzi install <slug>" >&2
+      exit 1
+    fi
+    cmd_install "$1"
     ;;
   search|s|-s)
     shift
@@ -148,7 +152,12 @@ case "${1:-}" in
     cmd_search
     ;;
   info|show)
-    cmd_info "${2:?Usage: uzi info <slug>}"
+    shift
+    if [ -z "${1:-}" ]; then
+      echo -e "  ${R}Usage:${N} uzi info <slug>" >&2
+      exit 1
+    fi
+    cmd_info "$1"
     ;;
   --help|-h|"")
     usage
