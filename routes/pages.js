@@ -25,7 +25,7 @@ function renderFooter(stats, totalVisits, popular) {
             <p class="footer-desc">uzi.pm is a lightweight package manager for scripts that lets you install anything with a single curl command :3 <br>Fast, minimal, and brutally simple.</p>
             <div class="footer-social">
               <a href="https://discord.4furri.es" class="social-link" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
-              <a href="https://www.youtube.com/@vahistar" class="social-link" aria-label="YouTube"><i class="fa-brands fa-x-youtube"></i></a>
+              <a href="https://www.youtube.com/@vahistar" class="social-link" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
               <a href="https://github.com/Vahistar" class="social-link" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
             </div>
           </div>
