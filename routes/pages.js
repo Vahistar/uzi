@@ -22,11 +22,11 @@ function renderFooter(stats, totalVisits, popular) {
               <img src="/assets/logo.svg" alt="" width="28" height="28">
               <span>uzi.pm</span>
             </div>
-            <p class="footer-desc">uzi.pm — package manager for scripts. Install anything with one curl command.</p>
+            <p class="footer-desc">uzi.pm is a lightweight package manager for scripts that lets you install anything with a single curl command :3 <br>Fast, minimal, and brutally simple.</p>
             <div class="footer-social">
-              <a href="#" class="social-link" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
-              <a href="#" class="social-link" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-              <a href="#" class="social-link" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+              <a href="https://discord.4furri.es" class="social-link" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+              <a href="https://www.youtube.com/@vahistar" class="social-link" aria-label="YouTube"><i class="fa-brands fa-x-youtube"></i></a>
+              <a href="https://github.com/Vahistar" class="social-link" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
             </div>
           </div>
           <div class="footer-links">
@@ -107,7 +107,7 @@ router.get('/', async (req, res, next) => {
     const content = `
       <section class="hero">
         <div class="hero-content">
-          <h1 class="hero-title"><span class="gradient-text">uzi.pm</span><br>package manager</h1>
+          <h1 class="hero-title"><span class="gradient-text">uzi.pm</span></h1>
           <p class="hero-subtitle">Search. Copy. Curl. Done :3</p>
           <div class="terminal-mockup">
             <div class="terminal-header">
@@ -116,10 +116,10 @@ router.get('/', async (req, res, next) => {
             </div>
             <div class="terminal-body">
               <div class="term-line"><span class="term-dot">●</span> <span class="term-dim">uzi.pm</span> engine <span class="term-green">active</span></div>
-              <div class="term-line"><span class="term-dot">●</span> <span class="term-dim">scripts indexed:</span> 5 <span class="term-dim">· distros:</span> Ubuntu </div>
+              <div class="term-line"><span class="term-dot">●</span> <span class="term-dim">scripts indexed:</span> ${stats.total_scripts} <span class="term-dim">· distros:</span> Ubuntu, Windows </div>
               <div class="term-line cmd-line">
                 <span class="prompt">$</span>
-                <span class="cmd-static">curl -fsSL ${url}/install/pterodactyl | bash</span>
+                <span class="cmd-static">curl -fsSL ${url}/install/</span><span class="cmd-cycle" id="cycle-text">pterodactyl</span> <span class="cmd-bar">&nbsp;| bash</span>
               </div>
             </div>
           </div>
@@ -156,7 +156,7 @@ router.get('/', async (req, res, next) => {
               <div class="step-body">
                 <div class="step-label">Step 2</div>
                 <h3 class="step-title">Copy the command</h3>
-                <p class="step-desc">One curl or wget line — toggle between them</p>
+                <p class="step-desc">One curl, wget or PowerShell line, toggle between them ^^</p>
               </div>
             </div>
             <div class="step">
@@ -166,7 +166,7 @@ router.get('/', async (req, res, next) => {
               <div class="step-body">
                 <div class="step-label">Step 3</div>
                 <h3 class="step-title">Run in terminal</h3>
-                <p class="step-desc">Paste and execute — your software is ready</p>
+                <p class="step-desc">Paste and execute! Your software is ready :3</p>
               </div>
             </div>
           </div>
