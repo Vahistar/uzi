@@ -165,6 +165,13 @@ document.addEventListener('DOMContentLoaded', () => {
     el._hide = setTimeout(() => el.classList.remove('visible'), 2000);
   }
 
+  // --- Per-browser token for hearts ---
+  let heartToken = localStorage.getItem('heart_token');
+  if (!heartToken) {
+    heartToken = Math.random().toString(36).slice(2) + Date.now().toString(36);
+    localStorage.setItem('heart_token', heartToken);
+  }
+
   // --- Heart button ---
   const heartBtn = document.getElementById('heart-btn');
   if (heartBtn) {
@@ -180,7 +187,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     (async () => {
       try {
-        const res = await fetch(`/api/hearts/${heartBtn.dataset.slug}/status`);
+        const res = await fetch(`/api/hearts/${heartBtn.dataset.slug}/status`, {
+          headers: { 'X-Heart-Token': heartToken }
+        });
         const data = await res.json();
         if (data.liked) {
           heartBtn.classList.add('liked');
@@ -191,11 +200,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     heartBtn.addEventListener('click', async () => {
       const slug = heartBtn.dataset.slug;
-      const token = localStorage.getItem('heart_token') || '';
       try {
         const res = await fetch(`/api/hearts/${slug}`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-Heart-Token': token },
+          headers: { 'Content-Type': 'application/json', 'X-Heart-Token': heartToken },
           body: '{}',
         });
         const data = await res.json();
@@ -217,10 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
           if (icon) {
             icon.classList.add('pulse');
             setTimeout(() => icon.classList.remove('pulse'), 300);
-          }
-          if (!token) {
-            const newToken = Math.random().toString(36).slice(2) + Date.now().toString(36);
-            localStorage.setItem('heart_token', newToken);
           }
         } else if (data.action === 'removed') {
           heartBtn.classList.remove('liked');
