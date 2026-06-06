@@ -242,8 +242,7 @@ router.get('/script/:slug', async (req, res, next) => {
               <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
                 ${script.distro.split(',').filter(Boolean).map(function(d) {
                   var dd = d.trim();
-                  var sep = script.tested_on.indexOf(';;') > -1 ? ';;' : ',';
-                  var tested = ((script.tested_on || '').split(sep).filter(Boolean).filter(function(t) { return t.trim().indexOf(dd) === 0; }).map(function(t) { return t.trim().substring(dd.length).trim(); }).join(', ') || '');
+                  var tested = ((script.tested_on || '').split(';;').filter(Boolean).filter(function(t) { return t.trim().indexOf(dd) === 0; }).map(function(t) { return t.trim().substring(dd.length).trim(); }).join(', ') || '');
                   var icon = distroIcons[dd] || 'fa-solid fa-terminal';
                   return '<span class="chip"><i class="' + icon + '" style="margin-right:4px"></i> ' + dd + '</span>' + (tested ? '<span style="font-size:13px;color:var(--md-on-surface-variant)">' + tested + '</span>' : '');
                 }).join('')}
