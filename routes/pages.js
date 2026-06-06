@@ -25,7 +25,7 @@ function renderFooter(stats, totalVisits, popular) {
             <p class="footer-desc">uzi.pm is a lightweight package manager for scripts that lets you install anything with a single curl command :3 <br>Fast, minimal, and brutally simple.</p>
             <div class="footer-social">
               <a href="https://discord.4furri.es" class="social-link" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
-              <a href="https://www.youtube.com/@vahistar" class="social-link" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+              <a href="https://www.youtube.com/@vahistar" class="social-link" aria-label="YouTube"><i class="fa-brands fa-x-youtube"></i></a>
               <a href="https://github.com/Vahistar" class="social-link" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
             </div>
           </div>
@@ -240,11 +240,10 @@ router.get('/script/:slug', async (req, res, next) => {
                 </div>
               </div>
               <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-                ${script.distro.split(',').filter(Boolean).map(function(d, i) {
+                ${script.distro.split(',').filter(Boolean).map(function(d) {
                   var dd = d.trim();
                   var sep = script.tested_on.indexOf(';;') > -1 ? ';;' : ',';
-                  var tested = ((script.tested_on || '').split(sep).filter(Boolean)[i] || '').trim();
-                  if (tested.indexOf(dd) === 0) tested = tested.substring(dd.length).trim();
+                  var tested = ((script.tested_on || '').split(sep).filter(Boolean).filter(function(t) { return t.trim().indexOf(dd) === 0; }).map(function(t) { return t.trim().substring(dd.length).trim(); }).join(', ') || '');
                   var icon = distroIcons[dd] || 'fa-solid fa-terminal';
                   return '<span class="chip"><i class="' + icon + '" style="margin-right:4px"></i> ' + dd + '</span>' + (tested ? '<span style="font-size:13px;color:var(--md-on-surface-variant)">' + tested + '</span>' : '');
                 }).join('')}
